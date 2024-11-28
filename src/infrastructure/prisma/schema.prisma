@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id              Int       @id @default(autoincrement()) // Identificador único do livro
+  title           String // Título do livro
+  author          String // Autor do livro
+  isbn            String    @unique // ISBN do livro, único
+  publicationYear Int // Ano de publicação
+  publisherId     Int // Foreign key para a editora
+  publisher       Publisher @relation(fields: [publisherId], references: [id]) // Relacionamento com a editora
+}
+
+model Publisher {
+  id    Int    @id @default(autoincrement()) // Identificador único da editora
+  name  String // Nome da editora
+  books Book[] // Lista de livros publicados pela editora
+}
